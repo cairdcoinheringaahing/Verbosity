@@ -2,15 +2,37 @@ import re, sys
 import exceptions, parser, types
 
 VARIABLES = {}
-PARENTS = {'Array':types.Array, 'Binary':types.Binary, 'Boolean':types.Boolean,
-           'Class':types.Class, 'Complex':types.Complex,
-           'Conditional':types.Conditional, 'Dictionary':types.Dictionary,
-           'Error':types.Error, 'FloatingPoint':types.FloatingPoint,
-           'Function':types.Function, 'Input':types.Input,
-           'Integer':types.Integer, 'Loop':types.Loop, 'Output':types.Output,
-           'String':types.String, 'Set':types.Set}
-           
 INCLUDES = []
+PARENTS = {'Array':types.Array,
+	   'Binary':types.Binary,
+	   'Boolean':types.Boolean,
+           'Class':types.Class,
+	   'Complex':types.Complex,
+           'Conditional':types.Conditional,
+	   'Dictionary':types.Dictionary,
+           'Error':types.Error,
+	   'FloatingPoint':types.FloatingPoint,
+           'Function':types.Function,
+	   'Input':types.Input,
+           'Integer':types.Integer,
+	   'Loop':types.Loop,
+	   'Output':types.Output,
+           'String':types.String,
+	   'Set':types.Set}
+
+def arg_eval(args):
+	for arg in args:
+		if isint(arg):
+			yield types.Integer(arg)
+		if isreal(arg):
+			yield types.FloatingPoint(arg)
+		if iscomplex(arg):
+			yield types.Complex(arg)
+		if isstring(arg):
+			yield types.String(arg)
+		if arg.split(':')[0] in INCLUDES:
+			type_ = PARENTS[arg.split(':')[0]]
+			method = arg.split(':')[1]
 
 def interpreter(code, stdin, ARGV, stdout):
 	code = parser.parser(code)
@@ -34,11 +56,11 @@ def interpreter(code, stdin, ARGV, stdout):
 			try: variable_type = VARIABLES[name].type_of
 			except: raise AttemptToRedefineUnknownVariable(name)
 			VARIABLES[name] = variable_type(value)
-		elif func.split(':')[0] in PARENTS.keys():
+		elif func.split(':')[0] in INCLUDES:
 			type_ = PARENTS[func.split(':')[0]]
 			method = func.split(':')[1]
 			args = line[1]
-			try: type_
+			value = type_.__run_method__(method, arg_eval(args))
 			
 
 print(INCLUDES)

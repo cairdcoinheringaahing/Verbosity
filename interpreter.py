@@ -33,6 +33,8 @@ def arg_eval(args):
 		if arg.split(':')[0] in INCLUDES:
 			type_ = PARENTS[arg.split(':')[0]]
 			method = arg.split(':')[1]
+			a = arg_eval(arg)
+			type_.__run_method__(method, a)
 
 def interpreter(code, stdin, ARGV, stdout):
 	code = parser.parser(code)

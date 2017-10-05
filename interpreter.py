@@ -57,7 +57,12 @@ def arg_eval(args):
 			method = arg.aplit(':')[1]
 			a = list(arg_eval(arg))
 			yield var.__run_method__(method, a)
-		yield []
+			
+		try:
+			yield eval("types." + str(arg))
+		except:
+			try: yield eval(arg)
+			except: yield []
 
 def interpreter(code, stdin, ARGV, stdout):
 	code = parser.parser(code)

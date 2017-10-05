@@ -20,6 +20,18 @@ PARENTS = {'Array':types.Array,
            'String':types.String,
 	   'Set':types.Set}
 
+def isint(string):
+	return re.search(r'^-?\d+$', string) and 'Integer' in INCLUDES
+
+def isreal(string):
+	return re.search(r'^-?\d+\.\d+$', string) and 'FloatingPoint' in INCLUDES
+
+def iscomplex(string):
+	return re.search(r'^\d+(\.\d+)?[\+-]\d+(\.\d+)?j$', string) and 'Complex' in INCLUDES
+
+def isstring(string):
+	return re.search(r'^"|(""").*\1$', string) and 'String' in INCLUDES
+
 def arg_eval(args):
 	for arg in args:
 		if isint(arg):
@@ -33,8 +45,14 @@ def arg_eval(args):
 		if arg.split(':')[0] in INCLUDES:
 			type_ = PARENTS[arg.split(':')[0]]
 			method = arg.split(':')[1]
-			a = arg_eval(arg)
-			type_.__run_method__(method, a)
+			a = list(arg_eval(arg))
+			yield type_.__run_method__(method, a)
+		if arg.split(':')[0] in VARIABLES.keys():
+			var = VARIABLES[arg.split(':')[0]]
+			method = arg.aplit(':')[1]
+			a = list(arg_eval(arg))
+			yield var.__run_method__(method, a)
+		yield []
 
 def interpreter(code, stdin, ARGV, stdout):
 	code = parser.parser(code)
@@ -47,12 +65,12 @@ def interpreter(code, stdin, ARGV, stdout):
 					INCLUDES.append(PARENTS[new])
 			else:
 				INCLUDES.append(new_type[0])
-		if func.search(r'({}):DefineVariable'.format('|'.join(INCLUDES)), func):
+		if re.search(r'({}):DefineVariable'.format('|'.join(INCLUDES)), func):
 			variable_type = PARENTS[func.split(':DefineVariable')[0]]
 			name = line[1][0]
 			value = line[1][1]
 			VARIABLES[name] = variable_type(value)
-		elif func.search(r'({}):RedefineVariable'.format('|'.join(INCLUDES)), func):
+		elif re.search(r'({}):RedefineVariable'.format('|'.join(INCLUDES)), func):
 			name = line[1][0]
 			new_value = line[1][1]
 			try: variable_type = VARIABLES[name].type_of
@@ -61,8 +79,12 @@ def interpreter(code, stdin, ARGV, stdout):
 		elif func.split(':')[0] in INCLUDES:
 			type_ = PARENTS[func.split(':')[0]]
 			method = func.split(':')[1]
-			args = line[1]
-			value = type_.__run_method__(method, arg_eval(args))
-			
-
+			args = list(args_eval(line[1]))
+			type_.__run_method__(method, args)
+		elif func.split(':')[0] in VARIABLES.keys():
+			var = VARIABLES[func.split(':')[0]]
+			method = func.split(':')[1]
+			args = list(args_eval(line[1]))
+			var.__run_method__(method, args)
+		
 print(INCLUDES)

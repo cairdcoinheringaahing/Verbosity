@@ -1,24 +1,29 @@
-import re, sys
-import exceptions, parser, types
+import re
+import sys
+
+import exceptions
+import parser
+import _types as types
 
 VARIABLES = {}
 INCLUDES = []
 PARENTS = {'Array':types.Array,
 	   'Binary':types.Binary,
 	   'Boolean':types.Boolean,
-           'Class':types.Class,
 	   'Complex':types.Complex,
-           'Conditional':types.Conditional,
 	   'Dictionary':types.Dictionary,
-           'Error':types.Error,
 	   'FloatingPoint':types.FloatingPoint,
-           'Function':types.Function,
 	   'Input':types.Input,
            'Integer':types.Integer,
-	   'Loop':types.Loop,
 	   'Output':types.Output,
            'String':types.String,
 	   'Set':types.Set}
+
+STRUCTURES = {'Class':types.Structures.Class,
+	      'Conditional':types.Structures.Conditional,
+	      'Error':types.Structures.Error,
+	      'Function':types.Structures.Function,
+	      'Loop':types.Structures.Loop}
 
 def isint(string):
 	return re.search(r'^-?\d+$', string) and 'Integer' in INCLUDES

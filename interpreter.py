@@ -32,7 +32,7 @@ def isreal(string):
 	return re.search(r'^-?\d+\.\d+$', string) and 'FloatingPoint' in INCLUDES
 
 def iscomplex(string):
-	return re.search(r'^\d+(\.\d+)?[\+-]\d+(\.\d+)?j$', string) and 'Complex' in INCLUDES
+	return re.search(r'^-?\d+(\.\d+)?[+-]\d+(\.\d+)?j$', string) and 'Complex' in INCLUDES
 
 def isstring(string):
 	return re.search(r'^"|(""").*\1$', string) and 'String' in INCLUDES

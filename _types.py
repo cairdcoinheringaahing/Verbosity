@@ -10,7 +10,7 @@ class BaseClass(object):
 		try: getattr(self, method)
 		except: return exceptions.RaiseException('UnknownMethodCall')
 		value = getattr(self, method)(*args)
-		self = value
+		self.value = value
 		return value
 
 class Array(BaseClass, list):
@@ -47,6 +47,12 @@ class Input(BaseClass):
 class Integer(BaseClass, int):
 	def __repr__(self):
 		return "Integer<{}>".format(self.value)
+	
+	def Increment(self):
+		return self.value + 1
+	
+	def Decrement(self):
+		return self.value - 1
 
 class Output(BaseClass):
 	def __repr__(self):

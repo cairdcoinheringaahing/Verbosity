@@ -6,8 +6,6 @@ import parser
 import _types as types
 import _structs as structures
 
-VARIABLES = {}
-INCLUDES = []
 PARENTS = {'Array':types.Array,
 	   'Binary':types.Binary,
 	   'Boolean':types.Boolean,
@@ -19,12 +17,15 @@ PARENTS = {'Array':types.Array,
 	   'Output':types.Output,
            'String':types.String,
 	   'Set':types.Set}
+STRUCTS = {'Class':structures.Class,
+	   'Conditional':structures.Conditional,
+	   'Error':structures.Error,
+	   'Function':structures.Function,
+	   'Loop':structures.Loop}
 
-STRUCTURES = {'Class':structures.Class,
-	      'Conditional':structures.Conditional,
-	      'Error':structures.Error,
-	      'Function':structures.Function,
-	      'Loop':structures.Loop}
+VARIABLES = {}
+INCLUDES = []
+STRUCTURES = []
 
 def isint(string):
 	return re.search(r'^-?\d+$', string) and 'Integer' in INCLUDES
@@ -74,8 +75,12 @@ def handle_line(line):
 	func = line[0]
 		
 	if func == 'Include':
-		new_type = line[1]
-		INCLUDES.append(new_type[0])
+		new_type = line[1][0]
+		INCLUDES.append(new_type)
+		
+	if func == 'Structure':
+		new_struct = line[1][0]
+		STRUCTURES.append(new_struct)
 			
 	elif re.search(r'({}):DefineVariable'.format('|'.join(INCLUDES)), func):
 		variable_type = PARENTS[func.split(':DefineVariable')[0]]
@@ -102,6 +107,9 @@ def handle_line(line):
 		method = func.split(':')[1]
 		args = list(standard_eval(*line[1]))
 		type_.__run_method__(var, method, args)
+		
+	elif func.split(':')[0] in STRUCTURES:
+		print(line)
 
 def interpreter(code):
 	code = parser.parser(code)

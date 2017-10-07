@@ -2,16 +2,20 @@ import exceptions
 
 class BaseClass(object):
 	def __init__(self, value=None):
-		base = self.__class__.__mro__[2]
-		try: self.value = base(value)
-		except: self.value = base()
-			
-	def __run_method__(self, method, args):
-		try: getattr(self, method)
+		self.base = self.__class__.__mro__[2]
+		try: self.value = self.base(value)
+		except: self.value = self.base()
+	
+	@staticmethod
+	def __run_method__(master, method, args):
+		try: func = getattr(master, method)
 		except: return exceptions.RaiseException('UnknownMethodCall')
-		value = getattr(self, method)(*args)
-		self.value = value
+		value = func(master, *args)
+		master.value = value
 		return value
+
+	def __repr__(self):
+		return '{}<{}>'.format(self.__class__.__name__, self.value)
 
 class Array(BaseClass, list):
 	def __repr__(self):
@@ -19,10 +23,10 @@ class Array(BaseClass, list):
 
 class Binary(BaseClass):
 	def __repr__(self):
-		return "BinaryInteger<{}>".format("; ".join(map(str, self.value)))
+		return "BinaryInteger<{}>".format("".join(map(str, self.value)))
 
 class Boolean(BaseClass):
-	def __repr__self):
+	def __repr__(self):
 		return "Boolean<{}>".format(["False", "True"][self.value])
 
 class Complex(BaseClass, complex):
@@ -37,17 +41,13 @@ class Dictionary(BaseClass, dict):
 	pass
 
 class FloatingPoint(BaseClass, float):
-	def __repr__(self):
-		return "FloatingPoint<{}>".format(self.value)
+	pass
 
 class Input(BaseClass):
 	def __repr__(self):
 		return "Input metaclass"
 
 class Integer(BaseClass, int):
-	def __repr__(self):
-		return "Integer<{}>".format(self.value)
-	
 	def Increment(self):
 		return self.value + 1
 	
@@ -59,8 +59,7 @@ class Output(BaseClass):
 		return "Output metaclass"
 
 class String(BaseClass, str):
-	def __repr__(self):
-		return "String<{}>".format(self.value)
+	pass
 
 class Set(BaseClass, set):
 	def __repr__(self):

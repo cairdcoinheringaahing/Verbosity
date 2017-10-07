@@ -1,10 +1,11 @@
 Include<Boolean>
-Include<Conditional>
 Include<Input>
 Include<Integer>
-Include<Loop>
 Include<Output>
 Include<String>
+
+Structure<Conditional>
+Structure<Loop>
 
 String:DefineVariable<program; Input:RetrieveNthARGV<0>>
 Integer:DefineVariable<counter; 0>

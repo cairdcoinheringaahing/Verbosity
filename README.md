@@ -1,2 +1,2 @@
 # Verbosity
-A scripting, practical programming language
+A practical programming language designed to lose code golf competitions

@@ -22,10 +22,11 @@ def list_replace(line, old, new):
     return line
 
 def parser(code):
-    QUOTE_REGEX = r'''((\d+|[A-Za-z@:]+)|(".*"))'''
+    QUOTE_REGEX = r'''((\d+|[A-Za-z@:]+)|("[^"]*"))'''
     CMD_REGEX = r'''(\[|[, ]){}([,|\]])(\]?, \[)?'''.format(QUOTE_REGEX)
 
-    code = list(filter(None, code.strip().replace(' ','').split('\n')))
+    normal = list(map(str.lstrip, filter(None, code.split('\n'))))
+    code = list(filter(lambda a:a and a[0] != '$', normal))
     for i in range(len(code)):
         if code[i] != ']':
             code[i] = '['+code[i]

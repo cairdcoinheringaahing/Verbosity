@@ -7,7 +7,7 @@ import _types as types
 import _checks as checks
 
 VARIABLES = {}
-INCLUDES = ['String']
+INCLUDES = []
 STRUCTURES = []
 EXTERNALS = []
 
@@ -211,5 +211,5 @@ class Interpreter:
 
 if __name__ == '__main__':
     interpreter = Interpreter()
-    program = sys.argv[1]
+    program = open(sys.argv[1], 'r').read()
     interpreter.interpreter(program)

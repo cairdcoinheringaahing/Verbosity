@@ -30,7 +30,7 @@ def parser(code):
     for i in range(len(code)):
         if code[i] != ']':
             code[i] = '['+code[i]
-        for old, new in [['<', ', ['], ['>', ']'], ['][', '], ['], [';', ', ']]:
+        for old, new in [['<', ', ['], ['>', ']'], ['][', '], ['], ['; ', ', ']]:
             code[i] = list_replace(code[i], old, new)
         if code[i][-1] != '[':
             code[i] += '],'

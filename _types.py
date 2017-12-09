@@ -2,6 +2,10 @@ import sys
 
 import _exceptions as exceptions
 
+text = sys.stdin.read()
+stdin = iter(text)
+lines = iter(text.split('\n'))
+
 class BaseClass(object):
     def __init__(self, value=None):
         try: self.base = self.__class__.__mro__[2]
@@ -79,6 +83,32 @@ class FloatingPoint(BaseClass, float):
 class Input(BaseClass):
     def __repr__(self):
         return "Input metaclass"
+    
+    def ReadAllFromInput(self):
+        return ''.join(stdin)
+    
+    def ReadCharacterFromInput(self):
+        return next(stdin)
+    
+    def ReadEvaluatedLineFromInput(self):
+        return eval(next(lines))
+    
+    def ReadEvaluatedStringFromInput(self):
+        return eval(''.join(stdin))
+    
+    def ReadLineFromInput(self):
+        return next(lines)
+    
+    def ReadIntegerFromInput(self):
+        global stdin
+        token = ''
+        for char in stdin:
+            if char.isdigit():
+                token += char
+            else:
+                break
+        stdin = iter([char] + list(stdin))
+        return int(token)
 
 class Integer(BaseClass, int):
     def Increment(self):

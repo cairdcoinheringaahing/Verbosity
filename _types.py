@@ -130,6 +130,8 @@ class Integer(BaseClass, int):
         if type(y) != Integer:
             exceptions.RaiseException('Right argument must be Integer type')
         return self.value / y.value
+    def Remainder(self, y):
+        return self.value % y.value
 
     __str__ = BaseClass.__repr__
 

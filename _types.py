@@ -35,6 +35,7 @@ class Binary(BaseClass):
 class Boolean(BaseClass):
     TRUE = True
     FALSE = False
+	BOOLEAN_OPTIONS = [TRUE, FALSE]
 
     def __init__(self, value=None):
         self.value = bool(value)
@@ -43,19 +44,19 @@ class Boolean(BaseClass):
         return "Boolean<{}>".format("TRUE" if self.value else "FALSE")
 
     def LessThan(self, x, y):
-        return x.value < y.value
+        return BOOLEAN_OPTIONS[x.value < y.value]
 
     def GreaterThan(self, x, y):
-        return x.value > y.value
+        return BOOLEAN_OPTIONS[x.value > y.value]
 
     def ArgumentsAreEqual(self, x, y):
-        return x.value == y.value
+        return BOOLEAN_OPTIONS[x.value == y.value]
 
     def GreaterThanOrEqualTo(self, x, y):
-        return x.value >= y.value
+        return BOOLEAN_OPTIONS[x.value >= y.value]
 
     def LessThanOrEqualTo(self, x, y):
-        return x.value <= y.value
+        return BOOLEAN_OPTIONS[x.value <= y.value]
 
     def LogicalNot(self, value):
         return not value.value
@@ -65,19 +66,67 @@ class Boolean(BaseClass):
 
     def LogicalOr(self, x, y):
         return x.value or y.value
+	
+	def ObjectIsOfArrayType(self, obj):
+		return self.TypeIsEqualTo(obj, (Array, list))
+	
+	def ObjectIsOfBinaryType(self, obj):
+		return self.TypeIsEqualTo(obj, (Binary, ))
+	
+	def ObjectIsOfBooleanType(self, obj):
+		return self.TypeIsEqualTo(obj, (Boolean, bool))
+	
+	def ObjectIsOfComplexType(self, obj):
+		return self.TypeIsEqualTo(obj, (ComplexNumber, complex))
+	
+	def ObjectIsOfDictionaryArrayType(self, obj):
+		return self.TypeIsEqualTo(obj, (DictionaryArray, dict))
+	
+	def ObjectIsOfFloatingPointNumberType(self, obj):
+		return self.TypeIsEqualTo(obj, (FloatingPointNumber, float))
+	
+	def ObjectIsOfInputType(self, obj):
+		return self.TypeIsEqualTo(obj, (Input, ))
+	
+	def ObjectIsOfIntegerType(self, obj):
+		return self.TypeIsEqualTo(obj, (Integer, int))
+	
+	def ObjectIsOfNumericType(self, obj):
+		return self.TypeIsEqualTo(obj, (Integer, FloatingPointNumber, ComplexNumber, int, float, complex))
+	
+	def ObjectIsOfOutputType(self, obj):
+		return self.TypeIsEqualTo(obj, (Output, ))
+	
+	def ObjectIsOfReadNumberType(self, obj):
+		return self.TypeIsEqualTo(obj, (Integer, FloatingPointNumber, int, float))
+	
+	def ObjectIsOfSetArrayType(self, obj):
+		return self.TypeIsEqualTo(obj, (SetArray, set))
+	
+	def ObjectIsOfStringType(self, obj):
+		return self.TypeIsEqualTo(obj, (String, str))
+	
+	def ObjectIsOfUnorderedSetArray(self, obj):
+		return self.TypeIsEqualTo(obj, (UnorderedSetArray, ))
+	
+	def TypeIsEqualTo(self, obj, types):
+		for ty in types:
+			if not (type(obj) == ty or type(obj) == type(ty)):
+				return self.FALSE
+		return self.TRUE
 
-class Complex(BaseClass, complex):
+class ComplexNumber(BaseClass, complex):
     def __init__(self, real, imag):
         self.REAL = real
         self.IMAGINARY = imag
                 
     def __repr__(self):
-        return "Complex<{}; {}>".format(self.real, self.imag)
+        return "Complex<{}; {}>".format(self.REAL, self.IMAGINARY)
 
-class Dictionary(BaseClass, dict):
+class DictionaryArray(BaseClass, dict):
     pass
 
-class FloatingPoint(BaseClass, float):
+class FloatingPointNumber(BaseClass, float):
     pass
 
 class Input(BaseClass):
@@ -111,27 +160,37 @@ class Input(BaseClass):
         return int(token)
 
 class Integer(BaseClass, int):
-    def Increment(self):
-        return self.value + 1
-        
+    
     def Decrement(self):
         return self.value - 1
-
-    def Sum(self, y):
-        return self.value + y.value
-
+    
     def Difference(self, y):
+		if type(y) != Integer:
+			exceptions.RaiseException('Right argument must be a Numeric type')
         return self.value - y.value
-
+    
+    def Increment(self):
+        return self.value + 1
+    
     def Product(self, y):
+		if type(y) != Integer:
+			exceptions.RaiseException('Right argument mut be a Numeric type')
         return self.value * y.value
 
     def Quotient(self, y):
         if type(y) != Integer:
-            exceptions.RaiseException('Right argument must be Integer type')
+            exceptions.RaiseException('Right argument must be a Numeric type')
         return self.value / y.value
+	
     def Remainder(self, y):
+		if type(y) != Integer:
+			exceptions.RaiseException('Right argument must be a Numeric type')
         return self.value % y.value
+	
+    def Sum(self, y):
+		if type(y) != Integer:
+			exceptions.RaiseException('Right argument must be a Numeric type')
+        return self.value + y.value
 
     __str__ = BaseClass.__repr__
 
@@ -148,6 +207,9 @@ class Output(BaseClass):
         Output.FILE.write(text + end)
         Output.LAST = text
         Output.WRITTEN += text + end
+		
+class SetArray(BaseClass, set):
+	pass
 
 class String(BaseClass, str):
     def TakeLastCharacters(self, n):
@@ -162,6 +224,6 @@ class String(BaseClass, str):
     def RemoveCharactersFromEnd(self, n):
         return self.value[:Integer(n)]
 
-class UnorderedSet(BaseClass, set):
+class UnorderedSetArray(BaseClass, set):
     def __repr__(self):
         return "UnorderedSet<{}>".format("; ".join(map(str, self.value)))

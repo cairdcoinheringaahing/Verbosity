@@ -239,4 +239,4 @@ class String(BaseClass, str):
 
 class UnorderedSetArray(BaseClass, set):
 	def __repr__(self):
-	return "UnorderedSet<{}>".format("; ".join(map(str, self.value)))
+		return "UnorderedSet<{}>".format("; ".join(map(str, self.value)))

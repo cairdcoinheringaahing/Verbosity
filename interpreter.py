@@ -108,7 +108,7 @@ PARENTS = {'Array'          :types.Array,
            'Integer'        :types.Integer,
            'MetaFunctions'  :MetaFunctions,
            'Output'         :types.Output,
-           'Set':           :types.SetArray,
+           'Set'            :types.SetArray,
            'String'         :types.String,
            'UnorderedSet'   :types.UnorderedSetArray}
 STRUCTS = {'Class'          :Class,

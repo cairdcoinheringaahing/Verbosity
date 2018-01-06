@@ -44,19 +44,19 @@ class Boolean(BaseClass):
 		return "Boolean<{}>".format("TRUE" if self.value else "FALSE")
 
 	def LessThan(self, x, y):
-		return BOOLEAN_OPTIONS[x.value < y.value]
+		return self.BOOLEAN_OPTIONS[x.value < y.value]
 
 	def GreaterThan(self, x, y):
-		return BOOLEAN_OPTIONS[x.value > y.value]
+		return self.BOOLEAN_OPTIONS[x.value > y.value]
 
 	def ArgumentsAreEqual(self, x, y):
-		return BOOLEAN_OPTIONS[x.value == y.value]
+		return self.BOOLEAN_OPTIONS[x.value == y.value]
 
 	def GreaterThanOrEqualTo(self, x, y):
-		return BOOLEAN_OPTIONS[x.value >= y.value]
+		return self.BOOLEAN_OPTIONS[x.value >= y.value]
 
 	def LessThanOrEqualTo(self, x, y):
-		return BOOLEAN_OPTIONS[x.value <= y.value]
+		return self.BOOLEAN_OPTIONS[x.value <= y.value]
 
 	def LogicalNot(self, value):
 		return not value.value

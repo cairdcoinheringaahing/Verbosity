@@ -10,9 +10,10 @@ VARIABLES = {}
 INCLUDES = []
 STRUCTURES = []
 EXTERNALS = []
+LOADED = False
 
 def isint(string):
-    return re.search(r'^-?\d+$', string) and 'Integer' in INCLUDES
+    return re.search(r'^-?\d$', string) and 'Integer' in INCLUDES
 
 def isreal(string):
     return re.search(r'^-?\d+\.\d+$', string) and 'FloatingPoint' in INCLUDES
@@ -68,6 +69,9 @@ def define_eval(*args):
     if value in VARIABLES.keys():
         return VARIABLES[value]
     exceptions.RaiseException('UnknownArgumentProvided')
+    
+def enum(**values):
+    return type('Enum', (), values)
 
 class MetaFunctions(types.BaseClass):
     GLOBALS = 'Testing'
@@ -98,23 +102,35 @@ class Loop(BaseBlock):
             for i, line in enumerate(block):
                 interpreter.handle_line(line, interpreter.index+i)
 
-PARENTS = {'Array'          :types.Array,
-           'Binary'         :types.Binary,
-           'Boolean'        :types.Boolean,
-           'Complex'        :types.ComplexNumber,
-           'Dictionary'     :types.DictionaryArray,
-           'FloatingPoint'  :types.FloatingPointNumber,
-           'Input'          :types.Input,
-           'Integer'        :types.Integer,
-           'MetaFunctions'  :MetaFunctions,
-           'Output'         :types.Output,
-           'Set'            :types.SetArray,
-           'String'         :types.String,
-           'UnorderedSet'   :types.UnorderedSetArray}
-STRUCTS = {'Class'          :Class,
-           'Conditional'    :Conditional,
-           'Function'       :Function,
-           'Loop'           :Loop}
+IntegerConstantValues = enum(IntegerValueZero  = 0,
+                             IntegerValueOne   = 1,
+                             IntegerValueTwo   = 2,
+                             IntegerValueThree = 3,
+                             IntegerValueFour  = 4,
+                             IntegerValueFive  = 5,
+                             IntegerValueSix   = 6,
+                             IntegerValueSeven = 7,
+                             IntegerValueEight = 8,
+                             IntegerValueNine  = 9)
+
+PARENTS = {'Array'                          :types.Array,
+           'Binary'                         :types.Binary,
+           'Boolean'                        :types.Boolean,
+           'ComplexNumber'                  :types.ComplexNumber,
+           'DictionaryLookupArray'          :types.DictionaryArray,
+           'FloatingPointNumber'            :types.FloatingPointNumber,
+           'InputMetaType'                  :types.Input,
+           'Integer'                        :types.Integer,
+           'IntegerConstantValues'          :IntegerConstantValues
+           'MetaFunctions'                  :MetaFunctions,
+           'OutputMetaType'                 :types.Output,
+           'OrderedSetArray'                :types.SetArray,
+           'CharacterArray'                 :types.String,
+           'UnorderedSetArray'              :types.UnorderedSetArray}
+STRUCTS = {'UserDefinedNonStandardClass'    :Class,
+           'ControlFlowConditionalStatement':Conditional,
+           'UserDefinedNonStandardFunction' :Function,
+           'ControlFlowRepeats'             :Loop}
 
 class Interpreter:
     def __init__(self):
@@ -189,9 +205,15 @@ class Interpreter:
             if line[0] == 'MetaFunctions:ExecuteScript':
                 file = line[1][0]
                 if file == 'MetaFunctions@FILE':
+                    if not LOADED:
+                        exceptions.ShowError(exceptions.CustomException('UnknownNameSpaceBeingUsed', line, lines.index(line)))
                     for i, line in enumerate(parsed):
                         self.index = i
                         self.handle_line(line, self.index)
+            if line[0] == 'MetaFunctions:LoadAllInternalTypesFromNameSpace':
+                namespace = line[1][0]
+                if namespace == 'MetaFunctions:RetrieveFromVerbosityStandardLibrary<>':
+                    LOADED = True
 
     def interpreter(self, code):
         self.code = code

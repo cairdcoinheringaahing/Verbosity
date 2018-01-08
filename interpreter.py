@@ -128,14 +128,14 @@ class Interpreter:
             
             func = line[0]
                 
-            if func == 'Include':
+            if func == 'IncludeTypesPackage':
                 new_type = line[1][0]
                 if new_type in PARENTS:
                     INCLUDES.append(new_type)
                 else:
                     exceptions.RaiseException('UnknownIncludeType')
                 
-            if func == 'Structure':
+            if func == 'IncludeStructuresPackage':
                 new_struct = line[1][0]
                 if new_struct in STRUCTS:
                     STRUCTURES.append(new_struct)
@@ -148,6 +148,8 @@ class Interpreter:
                 value = define_eval(*line[1][1:])
                 if name in VARIABLES.keys():
                     exceptions.RaiseException('VariableAlreadyDefined')
+                if len(name) < 10:
+                    exceptions.RaiseException('VariableNameMustBeTenCharactersMinimum')
                 VARIABLES[name] = variable_type(value)
                     
             elif re.search(r'({}):RedefineVariable'.format('|'.join(INCLUDES)), func):

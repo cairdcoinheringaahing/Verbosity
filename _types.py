@@ -35,7 +35,7 @@ class Binary(BaseClass):
 class Boolean(BaseClass):
 	TRUE = True
 	FALSE = False
-	BOOLEAN_OPTIONS = [TRUE, FALSE]
+	BOOLEAN_OPTIONS = [FALSE, TRUE]
 
 	def __init__(self, value=None):
 		self.value = bool(value)

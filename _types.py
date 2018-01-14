@@ -97,7 +97,7 @@ class Boolean(BaseClass):
 	def ObjectIsOfOutputType(self, obj):
 		return self.TypeIsEqualTo(obj, (Output, ))
 
-	def ObjectIsOfReadNumberType(self, obj):
+	def ObjectIsOfRealNumberType(self, obj):
 		return self.TypeIsEqualTo(obj, (Integer, FloatingPointNumber, int, float))
 
 	def ObjectIsOfSetArrayType(self, obj):

@@ -180,7 +180,7 @@ class Interpreter:
                 master.__run_method__(master, method, args, block)
                 
         except Exception as e:
-            exceptions.ShowError(e, self.code.split('\n')[index], index)
+            exceptions.ShowError(e, self.code.split('\n')[index], index + len(list(filter(lambda a: not a, self.code.split('\n')))))
 
     def handle_main(self, code, parsed):
         lines = code[0][2]

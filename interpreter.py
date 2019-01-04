@@ -215,4 +215,5 @@ class Interpreter:
 if __name__ == '__main__':
     interpreter = Interpreter()
     program = open(sys.argv[1], 'r').read()
-    interpreter.interpreter(program)
+    if program:
+        interpreter.interpreter(program)

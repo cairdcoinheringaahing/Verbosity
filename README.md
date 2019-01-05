@@ -20,3 +20,5 @@ As an example of just how long programs can be, the standard Hello, World! progr
     DefineMain<> [
         MetaFunctions:ExecuteScript<MetaFunctions@FILE>
     ]
+
+Verbosity is now being archived, check out the (much better) v2: [Verbosity v2](https://github.com/cairdcoinheringaahing/Verbosity-v2)

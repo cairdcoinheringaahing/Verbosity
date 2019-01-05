@@ -135,7 +135,7 @@ class Interpreter:
                 else:
                     exceptions.RaiseException('UnknownIncludeType')
                 
-            if func == 'Include':
+            if func == 'Structure':
                 new_struct = line[1][0]
                 if new_struct in STRUCTS:
                     STRUCTURES.append(new_struct)
